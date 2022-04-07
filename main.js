@@ -6,6 +6,7 @@ const app = Vue.createApp({
       url: "https:uni9oo.xyz",
       inStock: true,
       inventory: 1,
+      details: ["50% cotton", "30% wool", "20% polyester"],
     };
   },
 });
