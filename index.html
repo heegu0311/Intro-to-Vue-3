@@ -25,6 +25,9 @@
               <li v-for="detail in details">{{detail}}</li>
             </ul>
             <a :href="url" target="_blank">click to check my blog</a>
+            <div v-for="variant in variants" :key="variants">
+              {{variant.color}}
+            </div>
           </div>
         </div>
       </div>
