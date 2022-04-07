@@ -5,6 +5,7 @@ const app = Vue.createApp({
       image: "assets/images/socks_green.jpg",
       url: "https:uni9oo.xyz",
       inStock: true,
+      inventory: 1,
     };
   },
 });
