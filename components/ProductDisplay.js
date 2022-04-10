@@ -6,54 +6,48 @@ app.component("product-display", {
     },
   },
   template:
-    /* HTML */
-    ` <div class="product-display">
-      <div class="product-container">
-        <div class="product-image">
-          <!-- my solution -->
-          <!-- <img v-bind:src="image" :class="{ outOfStockImg: !inStock}" /> -->
-          <!-- my solution -->
-          <!-- solution -->
-          <img :class="{ 'out-of-stock-img': !inStock }" v-bind:src="image" />
-          <!-- solution -->
-        </div>
-        <div class="product-info">
-          <h1>{{ title }}</h1>
-          <p>{{ sale }}</p>
-          <p v-if="inStock">In Stock</p>
-          <p v-else>Out of Stock</p>
-          <p>shipping : {{ shipping }}</p>
-          <product-details :details="details"></product-details>
-          <a :href="url" target="_blank">click to check my blog</a>
-          <div
-            v-for="(variant, index) in variants"
-            :key="variants"
-            @mouseover="updateVariant(index)"
-            class="color-circle"
-            :style="{ backgroundColor : variant.color}"
-          ></div>
-          <button
-            class="button"
-            v-on:click="addToCart"
-            :class="{ disabledButton: !inStock}"
-            :disabled="!inStock"
-          >
-            Add to Cart
-          </button>
-          <button class="button" v-on:click="deleteFromCart">
-            Delete from Cart
-          </button>
-        </div>
+    /*html*/
+    `<div class="product-display">
+    <div class="product-container">
+      <div class="product-image">
+        <img v-bind:src="image">
       </div>
-    </div>`,
+      <div class="product-info">
+        <h1>{{ title }}</h1>
+
+        <p v-if="inStock">In Stock</p>
+        <p v-else>Out of Stock</p>
+
+        <p>Shipping: {{ shipping }}</p>
+        <ul>
+          <li v-for="detail in details">{{ detail }}</li>
+        </ul>
+
+        <div 
+          v-for="(variant, index) in variants" 
+          :key="variant.id" 
+          @mouseover="updateVariant(index)" 
+          class="color-circle" 
+          :style="{ backgroundColor: variant.color }">
+        </div>
+        
+        <button 
+          class="button" 
+          :class="{ disabledButton: !inStock }" 
+          :disabled="!inStock" 
+          v-on:click="addToCart">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+    <review-list v-if="reviews.length" :reviews="reviews"></review-list>
+    <review-form @review-submitted="addReview"></review-form>
+  </div>`,
   data() {
     return {
       product: "Socks",
       brand: "Vue Mastery",
       selectedVariant: 0,
-      onSale: true,
-      url: "https:uni9oo.xyz",
-      inventory: 100,
       details: ["50% cotton", "30% wool", "20% polyester"],
       variants: [
         {
@@ -69,19 +63,18 @@ app.component("product-display", {
           quantity: 0,
         },
       ],
+      reviews: [],
     };
   },
   methods: {
     addToCart() {
       this.$emit("add-to-cart", this.variants[this.selectedVariant].id);
     },
-    deleteFromCart() {
-      if (this.cart > 0) {
-        this.cart -= 1;
-      }
-    },
     updateVariant(index) {
       this.selectedVariant = index;
+    },
+    addReview(review) {
+      this.reviews.push(review);
     },
   },
   computed: {
@@ -93,10 +86,6 @@ app.component("product-display", {
     },
     inStock() {
       return this.variants[this.selectedVariant].quantity;
-    },
-    sale() {
-      if (this.onSale) return this.brand + " " + this.product + "is on sale";
-      else return this.brand + " " + this.product;
     },
     shipping() {
       if (this.premium) {
